@@ -58,13 +58,13 @@ $(document).ready(function() {
 	function Plugin(div, options) {
 	  // Variables
 	  this.settings = $.extend({
-	        // These are the defaults.
-	        color: "#556b2f",
-	        backgroundColor: "white",
-	        width: 300,
-	        height: 500,
-	        borderRadius: 10
-	      }, options ),
+      // These are the defaults.
+      color: "#556b2f",
+      backgroundColor: "white",
+      width: 300,
+      height: 500,
+      borderRadius: 10
+    }, options ),
 	  this.div = div;
 
 		// Set minimim height and width.
@@ -78,14 +78,13 @@ $(document).ready(function() {
 
 		init: function() {
 			var datastore,
-					source = $(this.div),
-					timeline;
+				source = $(this.div),
+				timeline;
 
 			datastore = this.extractData(source);
-			timeline = new Timeline(datastore, this.settings);
-			// Set yearSpan
 			source.text(""); // Clean div
 			this.createWorkspace(source);
+			timeline = new Timeline(datastore, this.settings);
 			timeline.draw();
 			console.log(datastore[0].title);
 	    //datastore.push(new Data('2000', 'Min titel', 'Min text'));
@@ -145,8 +144,47 @@ $(document).ready(function() {
 
    		// Add canvas
       $( "<canvas id='timelineCanvas' width='" + this.settings.width + "' height='" + this.settings.height + "'></canvas>" ).appendTo($( "#timelineWrapper" ));
-      canvas = document.getElementById('timelineCanvas');
-      ct = canvas.getContext('2d');
+      canvas = document.getElementById('timelineCanvas');					//elem
+      ct 				= canvas.getContext('2d');												//context
+      /*
+      canvas.addEventListener('click', function() { }, false);		//### can i remove this? ###
+      elemLeft	= canvas.offsetLeft;
+    	elemTop 	= canvas.offsetTop;
+      
+      elements = [];
+
+      // Add event listerner for 'click' events.
+      canvas.addEventListener('click', function(event) { 
+		    var x = event.pageX - elemLeft,
+		        y = event.pageY - elemTop;
+
+		  	// Collision detection between clicked offset and element.
+		    elements.forEach(function(element) {
+		        if (y > element.top && y < element.top + element.height 
+		            && x > element.left && x < element.left + element.width) {
+		            alert('clicked an element');
+		        }
+		    });
+
+      }, false);
+
+      // Add element.
+			elements.push({
+			    colour: '#05EFFF',
+			    width: 150,
+			    height: 100,
+			    top: 20,
+			    left: 15
+			});
+
+			// Render elements.
+			elements.forEach(function(element) {
+			    ct.fillStyle = element.colour;
+			    ct.fillRect(element.left, element.top, element.width, element.height);
+			});
+			*/
+
+
 		},
 	}
 
@@ -187,8 +225,13 @@ $(document).ready(function() {
 	// Takes in CENTER POSITION of magnifier.
 	function Magnifier(x, y) {
 		this.radius = 6;
+		this.lineWidth = 2;
+		this.width = this.radius*2+this.lineWidth;
+		this.height = this.radius*2+this.lineWidth;
+		this.colour = "#000";
+		this.backgroundColor = "white";
 		this.position = new Vector(x,y);
-		console.log('Magnifier added at: '+this.position.x+", "+this.position.y); 
+		console.log('Magnifier added at: '+this.position.x+", "+this.position.y);
 	}
 
 	Magnifier.prototype = {
@@ -199,7 +242,7 @@ $(document).ready(function() {
       ct.arc(0,0, this.radius, 0, 2 * Math.PI, false);
       ct.fillStyle = 'white';
       ct.fill();
-      ct.lineWidth = 2;
+      ct.lineWidth = this.lineWidth;
       ct.strokeStyle = 'black';
       ct.stroke();
 
@@ -213,7 +256,7 @@ $(document).ready(function() {
       //ct.lineCap = 'round';
       ct.stroke();
 
-      ct.restore();	
+      ct.restore();
 
 		}
 
@@ -242,11 +285,66 @@ $(document).ready(function() {
 			this.startYear= datastore[0].year;
 			this.numYears = Math.ceil(settings.height / this.rowHeight);
 			this.yearSpan = Math.ceil((this.endYear- this.startYear) / this.numYears);
-     	
-     	// Create magnifiers
-	    for (var i=0; i<this.numYears-1; ++i) {
-	    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));
-			}
+
+     	// Add magnifiers
+		    for (var i=0; i<this.numYears-1; ++i) {
+		    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));
+				}
+				// Add eventclick listeners
+				var self = this; // Capturing "this" into a local variable
+				canvas.addEventListener('click', function(event) { 
+		    	var x = event.pageX - canvas.offsetLeft,
+		        	y = event.pageY - canvas.offsetTop;
+	        console.log("Clicked at: "+x+", "+y);
+
+			    // Collision detection between clicked offset and element.
+		    	self.magnifiers.forEach(function(element) {
+		        if (y > element.position.y && y < element.position.y + element.height 
+		          && x > element.position.x && x < element.position.x + element.width) {
+		          alert('clicked an element at '+x+', '+y);
+		        }
+			    });
+
+				}, false);
+		},
+
+		createLinks: function(){
+			canvas = document.getElementById('timelineCanvas');					//elem
+      canvas.addEventListener('click', function() { }, false);		//### can i remove this? ###
+      elemLeft	= canvas.offsetLeft;
+    	elemTop 	= canvas.offsetTop;
+      ct 				= canvas.getContext('2d');												//context
+      elements = [];
+
+      // Add event listerner for 'click' events.
+      canvas.addEventListener('click', function(event) { 
+		    var x = event.pageX - elemLeft,
+		        y = event.pageY - elemTop;
+
+		  	// Collision detection between clicked offset and element.
+		    elements.forEach(function(element) {
+		        if (y > element.top && y < element.top + element.height 
+		            && x > element.left && x < element.left + element.width) {
+		            alert('clicked a plus sign');
+		        }
+		    });
+
+      }, false);
+
+      // Add element.
+			elements.push({
+			    colour: '#05EFFF',
+			    width: 150,
+			    height: 300,
+			    top: 200,
+			    left: 0
+			});
+
+			// Render elements.
+			elements.forEach(function(element) {
+			    ct.fillStyle = element.colour;
+			    ct.fillRect(element.left, element.top, element.width, element.height);
+			});
 		},
 
 		draw: function() {
@@ -265,6 +363,7 @@ $(document).ready(function() {
 	    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));
 	    	this.magnifiers[i].draw();
 			}
+
 		},
 
 		drawLine: function() {
@@ -281,6 +380,7 @@ $(document).ready(function() {
       ct.stroke();
       ct.restore();	
 		},
+
 		drawHolderOnLine: function(i) {
 			var width 	= this.holderWidth,
 					height 	= this.lineWidth,
@@ -297,6 +397,7 @@ $(document).ready(function() {
       ct.stroke();
       ct.restore();	
 		},
+
 		drawYear: function(i) {
 			var yearWidth = 50,
 					position = new Vector(this.lineAt-this.holderWidth-5, i*this.rowHeight+this.rowHeight/2);
