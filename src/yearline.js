@@ -28,8 +28,8 @@ $(document).ready(function() {
 });
 
 (function($, window, document) {
-	var timelines = new Array(),
-			settings;
+	timelines = new Array();
+	var settings;
   /* http://ejohn.org/blog/fast-javascript-maxmin/
 	  Array.max = function( array ){
 	      return Math.max.apply( Math, array );
@@ -38,8 +38,6 @@ $(document).ready(function() {
 	      return Math.min.apply( Math, array );
 	  };
 	*/
-
-
 
   /**
    * Support function to sort timeline array by year.
@@ -53,8 +51,6 @@ $(document).ready(function() {
 	  return 0;
 	}
 
-	
-
 
 	function Plugin(div, options) {
 	  // Variables
@@ -67,7 +63,6 @@ $(document).ready(function() {
       borderRadius: 10
     }, options ),
 	  this.div = div;
-	  
 
 		// Set minimim height and width.
 	  if (settings.height < 300) settings.height =300;
@@ -88,7 +83,8 @@ $(document).ready(function() {
 			this.createWorkspace(source);
 			this.from = datastore[0].year;
 			this.to 	= datastore[datastore.length-1].year;
-			timelines.push = new Timeline(this.from, this.to);
+			timelines.push(new Timeline(this.from, this.to));
+			console.log("numTimelines "+timelines.length);
 			//console.log(datastore[0].title);
 	    //datastore.push(new Data('2000', 'Min titel', 'Min text'));
 	    //console.log('were in! ' + this.settings.color + ", " + datastore[0].title + "\n" + source.text());
@@ -242,7 +238,7 @@ $(document).ready(function() {
 	}
 
 	// Takes in CENTER POSITION of magnifier.
-	function Magnifier(x, y,i) {
+	function Magnifier(x, y) {
 		this.radius = 6;
 		this.lineWidth = 2;
 		this.width = this.radius*2+this.lineWidth;
@@ -285,7 +281,26 @@ $(document).ready(function() {
 		setLastYear: function(year) {
 			this.lastYear = year;
 		},
+	}
 
+	function Minimizer(size) {
+		this.position = new Vector(size+5,size+5);
+		this.width = size*2+2;
+		this.height = size*2+2;
+		this.show = false;
+	}
+
+	Minimizer.prototype = {
+		setShow: function(bool){
+			this.show = bool;
+		},
+	}
+
+	timelines.pop = function(element) {
+		console.log("PoP! "+timelines.length);
+		timelines[timelines.length-2].addEventListeners();
+		timelines[timelines.length-2].draw();
+		return Array.prototype.pop.apply(this);
 	}
 
 	function Timeline(from, to) {
@@ -295,63 +310,118 @@ $(document).ready(function() {
 		this.startYear  = from,
 		this.endYear		= to,
 		this.rowHeight  = 50,
-		this.lineAt			= 100,
+		this.lineAt			= 70,
 		this.lineWidth	= 3,
 		this.holderWidth= 5,
 		this.magnifiers = new Array(),
+		this.minimizer = new Minimizer(10),
 		this.init();
-
 	}
+
+
 
 	Timeline.prototype = {
 		init: function() {
+			if (timelines.length > 0) this.minimizer.setShow(true);
 			console.log('Added timeline: ' + this.startYear +"-"+this.endYear);
 			this.numYears = Math.ceil(settings.height / this.rowHeight);
 			this.yearSpan = Math.ceil((this.endYear- this.startYear) / this.numYears);
 			//this.zoom.push(new Zoom(datastore[0].year, datastore[datastore.length-1].year, this.numYears));
-			this.addMagnifiers();
+			this.addZoomObjects();
+			this.addEventListeners();
 			this.draw();
 		},
 
-		addMagnifiers: function(){
-			if (this.yearSpan >=5){				
-				// Add megnifiers
+		addZoomObjects: function() {
+			if (this.yearSpan >=5){	
+				// Add magnifiers
 		    for (var i=0; i<this.numYears-1; ++i) {
 		    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));
 				}
 				this.setMagnifiersYear();
-					
-				// Add eventclick listeners
-				var self = this; // Capturing "this" into a local variable
+			}
+		},
+		addEventListeners: function(){
+			var self = this, // Capturing "this" into a local variable to be able to reach in function
+					hasMinimizeListener = false;
+					hasMagnifyListeners = false
+			// Set option to show minimizer to true if more than 1 timeline (if zoomed in).
+    	if(this.minimizer.show){
+    		console.log("showing minimizer");
+    		hasMinimizeListener = true;
+    		function minimizeClick(event) { 
+					var x = event.pageX - canvas.offsetLeft,
+							y = event.pageY - canvas.offsetTop,
+							clicked = false;
 
-				function myclick(event) { 
+	    		if(self.minimizer.show){
+						if (y > self.minimizer.position.y && y < self.minimizer.position.y + self.minimizer.height 
+		          && x > self.minimizer.position.x && x < self.minimizer.position.x + self.minimizer.width) {
+
+							console.log("Clicked minimizer!");
+							clicked = true;
+
+						}
+			    }
+		    	if (clicked) {
+		    		// Remove eventlisteners
+	        	canvas.removeEventListener('click', minimizeClick);
+						if (hasMagnifyListeners) canvas.removeEventListener('click', magnifyClick);
+
+						// Pop yearline
+	        	timelines.pop();
+						console.log("removed timeline");
+
+        	}
+			  }
+
+		    // Add event listener
+				canvas.addEventListener('click', minimizeClick);
+    	}
+
+
+			if (this.yearSpan >=5){			
+				hasMagnifyListeners = true;	
+					
+				// Add eventclick listeners (http://stackoverflow.com/questions/9880279/how-do-i-add-a-simple-onclick-event-handler-to-a-canvas-element)
+				function magnifyClick(event) { 
 		    	var x = event.pageX - canvas.offsetLeft,
 		        	y = event.pageY - canvas.offsetTop,
-		        	clicked = false;
+		        	clicked = false,
+		        	firstYear, 
+		        	lastYear;
 
 			    // Collision detection between clicked offset and element.
 		    	self.magnifiers.forEach(function(element) {
 		        if (y > element.position.y && y < element.position.y + element.height 
 		          && x > element.position.x && x < element.position.x + element.width) {
-	        		//console.log("Clicked at: "+x+", "+y+"\nYears: "+element.firstYear+", "+element.lastYear);
-		        	clicked = true
-		        	// Add a new timeline
-		        	timelines.push = new Timeline(element.firstYear, element.lastYear);
-		        }
-		        
-		        if (clicked) {
-		        	console.log('Need to remove addEventListener');
-		        	// Removing eventlistener
-		        	canvas.removeEventListener('click', myclick);
-							clicked = false;
-		        }
-		        
-			    });
+	        		
+	        		// Set flag to remove eventlistener
+	        		clicked = true;
+	        		firstYear = element.firstYear;
+	        		lastYear  = element.lastYear;
 
+		        	//console.log("Added timeline ("+timelines.length+")");
+		        }
+			    });
+			    
+			    // Removing eventlistener (http://stackoverflow.com/questions/4402287/javascript-remove-event-listener)
+		      if (clicked) {
+
+		      	// Remove eventlisteners
+	        	canvas.removeEventListener('click', magnifyClick);
+						if(hasMinimizeListener) canvas.removeEventListener('click', minimizeClick);
+
+	        	// Add a new timeline
+	        	timelines.push(new Timeline(firstYear, lastYear));
+	        	console.log("numTimelines "+timelines.length);
+	        }
 				}
 
-				canvas.addEventListener('click', myclick);
+				// Add event listener
+				canvas.addEventListener('click', magnifyClick);
 			}
+
 		},
 		setMagnifiersYear: function(){
 			for (var i=0; i<this.magnifiers.length; i++) {
@@ -362,8 +432,6 @@ $(document).ready(function() {
 				// console.log('For magnifier '+i+' : Start year: '+firstYear+'\nEnd year: '+lastYear);
 			}
 		},
-
-
 		draw: function() {
 			ct.clearRect(0,0,settings.width,settings.height);
 			//console.log("rows :" + this.numYears + ", yearspan: " + this.yearSpan);
@@ -381,15 +449,34 @@ $(document).ready(function() {
 		    	this.magnifiers[i].draw();
 				}
 	    }
-	    
+
 	    // Draw zoom out button if zoomed in.
-	    if (timelines.length > 1) {
-	    	//### NEED FIXING
-	    	alert("!!!!!!!!!!!!Draw zoomout!!!!!!!!!!!!!!!");
+	    if (this.minimizer.show) {
+	    	this.drawZoomout();
 	    }
 
 		},
+		drawZoomout: function() {
+			ct.save();
+			ct.beginPath();
+			ct.translate(this.minimizer.position.x, this.minimizer.position.y);
+      ct.arc(0,0, 10, 0, 2 * Math.PI, false);
+      ct.fillStyle = 'white';
+      ct.fill();
+      ct.lineWidth = 2;
+      ct.strokeStyle = 'black';
+      ct.stroke();
 
+      ct.beginPath();
+      ct.moveTo(-5, 0);
+      ct.lineTo(5, 0);
+      ct.strokeStyle = '#000',
+      ct.lineWidth = 2,
+      //ct.lineCap = 'round';
+      ct.stroke();
+
+      ct.restore();	
+		},
 		drawLine: function() {
 			var position = new Vector(this.lineAt, this.lineWidth);
 
@@ -404,7 +491,6 @@ $(document).ready(function() {
       ct.stroke();
       ct.restore();	
 		},
-
 		drawHolderOnLine: function(i) {
 			var width 	= this.holderWidth,
 					height 	= this.lineWidth,
@@ -421,7 +507,6 @@ $(document).ready(function() {
       ct.stroke();
       ct.restore();	
 		},
-
 		drawYear: function(i) {
 			var yearWidth = 50,
 					position = new Vector(this.lineAt-this.holderWidth-5, i*this.rowHeight+this.rowHeight/2);
