@@ -322,9 +322,9 @@ $(document).ready(function() {
 				this.setMagnifiersYear();
 					
 				// Add eventclick listeners
+				var clicked = false;
 				var self = this; // Capturing "this" into a local variable
-
-				function myclick(event) { 
+				canvas.addEventListener('click', function(event) { 
 		    	var x = event.pageX - canvas.offsetLeft,
 		        	y = event.pageY - canvas.offsetTop,
 		        	clicked = false;
@@ -334,23 +334,21 @@ $(document).ready(function() {
 		        if (y > element.position.y && y < element.position.y + element.height 
 		          && x > element.position.x && x < element.position.x + element.width) {
 	        		//console.log("Clicked at: "+x+", "+y+"\nYears: "+element.firstYear+", "+element.lastYear);
-		        	clicked = true
+		        	
 		        	// Add a new timeline
 		        	timelines.push = new Timeline(element.firstYear, element.lastYear);
 		        }
-		        
+		        /*
 		        if (clicked) {
 		        	console.log('Need to remove addEventListener');
 		        	// Removing eventlistener
-		        	canvas.removeEventListener('click', myclick);
+		        	canvas.removeEventListener('click', this);
 							clicked = false;
 		        }
-		        
+		        */
 			    });
 
-				}
-
-				canvas.addEventListener('click', myclick);
+				}, false);
 			}
 		},
 		setMagnifiersYear: function(){
