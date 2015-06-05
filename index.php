@@ -2,13 +2,14 @@
 <html>
 <head>
 	<title>yearline</title>
+	<link href="src/yearline.css" type="text/css" rel="stylesheet">
 </head>
 <body bgcolor="#fff">
 	<script type="text/javascript" src="src/jquery.js"></script>
 	<script type="text/javascript" src="src/yearline.js"></script>
 
 	<div id='content'>
-
+	<h1>Yearline</h1>
 		<div class="yearline1">
 
 			***
@@ -29,9 +30,21 @@
 			Personal
 
 			***
-			1453
+			1450
 			Books are here to stay
 			Some trivia about Gutenberg. The man did know quite a lot. In fact I dont really care. Iäm gonna jflksdjgjlahglaöj fafjsadj fhalsfja sdfdsafjdsa dajf jkdshfldksöfads-.
+			History
+
+			***
+			1453
+			Fall of western Rome
+			Jada, jada, jada.
+			History
+
+			***
+			1492
+			Columbus
+			Godmorgon Magistern!
 			History
 		</div>
 

@@ -1,0 +1,18 @@
+
+.timelineHeading{
+	color: #222;
+	background-color: #c9c9c9;
+	border-bottom: 1px solid #000000;
+	padding: 0px;
+}
+.timelineText{
+	color: #222;
+	padding: 0px;
+	background-color: #ffffff;
+} 
+.timelineHiddenObject{
+	display: none;
+}
+.timelineBringToFront{
+	z-index:10;
+}
