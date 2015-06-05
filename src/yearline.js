@@ -3,9 +3,9 @@ $(document).ready(function() {
     // ### Put this in other document
     $('.yearline1').yearline({
     	color:'#fff', 
-    	backgroundColor:'#cc3333',
+    	backgroundColor:'#fff',
     	width: 100,
-    	height: 600,
+    	height: 500,
     	borderRadius: 20
     });
     /*
@@ -164,11 +164,11 @@ $(document).ready(function() {
   /**
 	 * easytimeline data
 	 */
-	function Data(year, title, text, category) {
-	  this.year   	= year 			|| 1900;
-	  this.title		= title 		|| 'No title';
-	  this.text 		= text 			|| 'No text';
-	  this.category = category 	|| null;
+	function Data(year, title, text, importance) {
+	  this.year   		= year 				|| 1900;
+	  this.title			= title 			|| 'No title';
+	  this.text 			= text 				|| 'No text';
+	  this.importance = parseInt(importance) 	|| 3;
 	}	   
 	Data.prototype = {
 	}
@@ -324,8 +324,9 @@ $(document).ready(function() {
 								datastore[i].text+
 							"</div>"+
 						"</div>").css({
-							'top' : Math.floor(y),
-						}).appendTo(datafield);
+							'top' 		: Math.floor(y),
+							//'z-index'	: +(99 - datastore[i].importance),
+						}).addClass("timelineCat"+datastore[i].importance).appendTo(datafield);
 
 					// Place line from timeline to DataElement. 
 						ct.save();
@@ -346,10 +347,13 @@ $(document).ready(function() {
       	'left' 						: 0,
       	'padding'					: '0px',
       	'font-size' 			: this.headlineHeight-2+'px',
-      	'line-height'			: this.headlineHeight+'px'
+      	'line-height'			: this.headlineHeight+'px',
       }); 
 
+      // When clicking on a timeline event
       $(".timelineEvent").click(function(){
+      	$('.timelineText').addClass("timelineHiddenObject");
+      	$('.timelineEvent').removeClass("timelineBringToFront");
       	$(this).children(".timelineText").toggleClass("timelineHiddenObject");
       	$(this).toggleClass("timelineBringToFront"); 
       });

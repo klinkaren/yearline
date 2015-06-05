@@ -16,36 +16,37 @@
 			1789
 			French revolution
 			Jada, jada, jada.
-			History
+			2
 
 			***
 			2002
 			Milleniaboom
-			Example text for milleniaboom
+			Party!
+			3
 
 			***
 			1983
 			A star is born
 			Mr. Kjellberg is born. The beginning of the Viktorian era.
-			Personal
+			1
 
 			***
 			1450
 			Books are here to stay
 			Some trivia about Gutenberg. The man did know quite a lot. In fact I dont really care. Iäm gonna jflksdjgjlahglaöj fafjsadj fhalsfja sdfdsafjdsa dajf jkdshfldksöfads-.
-			History
+			1
 
 			***
 			1453
 			Fall of western Rome
 			Jada, jada, jada.
-			History
+			2
 
 			***
 			1492
 			Columbus
 			Godmorgon Magistern!
-			History
+			1
 		</div>
 
 <!--		
