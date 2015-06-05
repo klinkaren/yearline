@@ -65,12 +65,9 @@ $(document).ready(function() {
       height: 500,
       borderRadius: 10,
       font: "Roboto",
-      dataBg: "pink",
-      dataText: "green",
-      textSize: 12,
     }, options ),
 	  this.div = div,
-	  settings.timelineWidth = 100,	  
+	  settings.timelineWidth = 80,	  
 		addGoogleFont(settings.font);
 
 		// Set minimim height and width.
@@ -91,7 +88,7 @@ $(document).ready(function() {
 			this.from = datastore[0].year;
 			this.to 	= datastore[datastore.length-1].year;
 			timelines.push(new Timeline(this.from, this.to));
-			//console.log("numTimelines "+timelines.length);
+			console.log("numTimelines "+timelines.length);
 			//console.log(datastore[0].title);
 	    //datastore.push(new Data('2000', 'Min titel', 'Min text'));
 	    //console.log('were in! ' + this.settings.color + ", " + datastore[0].title + "\n" + source.text());
@@ -171,10 +168,7 @@ $(document).ready(function() {
 	  this.year   		= year 				|| 1900;
 	  this.title			= title 			|| 'No title';
 	  this.text 			= text 				|| 'No text';
-	  this.importance = parseInt(importance) 	|| 3; // 1 = most important, 5 = least important
-
-	  if (this.importance>5) this.importance = 5;
-	  if (this.importance<1) this.importance = 1;
+	  this.importance = parseInt(importance) 	|| 3;
 	}	   
 	Data.prototype = {
 	}
@@ -269,7 +263,7 @@ $(document).ready(function() {
 	 * Extends Array prototype for timelines.pop. Makes pop prepare and show timeline of the new last element.
 	 */ 
 	timelines.pop = function(element) {
-		//console.log("Removed timeline");
+		console.log("Removed timeline");
 		timelines[timelines.length-2].addEventListeners();
 		timelines[timelines.length-2].draw();
 		return Array.prototype.pop.apply(this);
@@ -318,44 +312,31 @@ $(document).ready(function() {
 					// Where to place div (vertical)
 					percentDown = (this.endYear-datastore[i].year)/(this.endYear-this.startYear);
 					timelinePx = settings.height-this.rowHeight;
-					y = this.rowHeight/2+(timelinePx*percentDown)+1;
+					y = this.rowHeight/2+(timelinePx*percentDown)-this.headlineHeight;
 					//y = Math.ceil(y);
 
 					// Place div
 					$("<div class='timelineEvent'>"+
 							"<div class='timelineHeading'>"+
-								"<div class='timelineTitle'>"+
-									datastore[i].year+": "+datastore[i].title+
-								"</div>"+
+								datastore[i].year+": "+datastore[i].title+
 							"</div>"+
 							"<div class='timelineText timelineHiddenObject'>"+
 								datastore[i].text+
 							"</div>"+
 						"</div>").css({
-							'top' 		: Math.floor(y-settings.textSize-10),
+							'top' 		: Math.floor(y),
 							//'z-index'	: +(99 - datastore[i].importance),
 						}).addClass("timelineCat"+datastore[i].importance).appendTo(datafield);
 
 					// Place line from timeline to DataElement. 
 						ct.save();
-			      ct.translate(this.lineAt, Math.floor(y));
+			      ct.translate(this.lineAt, Math.floor(y+this.headlineHeight)+.5);
 			      ct.beginPath();
-			   		/*
-			      var grd=ct.createLinearGradient(0,0,30,0);
-						grd.addColorStop(0,"black");
-						grd.addColorStop(1,settings.dataBg);
-						ct.moveTo(0,0);
-						ct.lineTo(30,0);
-						ct.lineWidth =3;
-						ct.strokeStyle = grd;
-						ct.stroke();
-			      */
-			      ct.moveTo(20, 0);
-			      ct.lineTo(30, 0);
-			      ct.lineTo(30, -5);
-			      ct.closePath();
-			      ct.fillStyle = settings.dataBg,
-			      ct.fill();
+			      ct.moveTo(0, 0);
+			      ct.lineTo(10, 0);
+			      ct.strokeStyle = '#000',
+			      ct.lineWidth = 1;
+			      ct.stroke();
 			      ct.restore();	
 				}
 
@@ -365,49 +346,25 @@ $(document).ready(function() {
       	'position' 				: 'absolute',
       	'left' 						: 0,
       	'padding'					: '0px',
-      	'font-size' 			: settings.textSize+2+'px',
-      	'line-height'			: settings.textSize+2+'px',
-      	'border'					: "2px solid "+settings.dataBg,
-      	//'border-radius'		: '2px',
-        //'-moz-border-radius': '2px',
-        'backgroundColor'	: '#ffffff',
-        'color'						: '#222',
-      });
+      	'font-size' 			: this.headlineHeight-2+'px',
+      	'line-height'			: this.headlineHeight+'px',
+      }); 
 
-      $(".timelineHeading").css({
-      	'backgroundColor' : settings.dataBg,
-      	'color' 					: settings.dataText,
-      });
-
-      $(".timelineText").css({
-      	'font-size' : settings.textSize,
-      });
-
-      //dataBg: "pink",
-      //dataText: "green",
-
-      // When clicking a timeline event
-      $(".timelineHeading").click(function(){
-      	//console.log("clicked heading");
+      // When clicking on a timeline event
+      $(".timelineEvent").click(function(){
       	$('.timelineText').addClass("timelineHiddenObject");
       	$('.timelineEvent').removeClass("timelineBringToFront");
-      	$(this).parent().children(".timelineText").toggleClass("timelineHiddenObject");
-      	$(this).parent().toggleClass("timelineBringToFront"); 
+      	$(this).children(".timelineText").toggleClass("timelineHiddenObject");
+      	$(this).toggleClass("timelineBringToFront"); 
       });
 
-      // When clicking an expanded timeline event
-      $(".timelineText").click(function(){
-      	$(this).parent().children(".timelineText").toggleClass("timelineHiddenObject");
-      	$(this).parent().toggleClass("timelineBringToFront"); 
-      	//console.log("clicked bring to front");
-			});
 		},
 		addZoomObjects: function() {
 			if (this.yearSpan >=5){	
 				// Add magnifiers
 		    for (var i=0; i<this.numYears-1; ++i) {
 		    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));
-		    	//console.log("Magnifier "+i+" at "+ this.magnifiers[i].position.x + ", "+this.magnifiers[i].position.y);
+		    	console.log("Magnifier "+i+" at "+ this.magnifiers[i].position.x + ", "+this.magnifiers[i].position.y);
 				}
 				this.setMagnifiersYear();
 			}
@@ -466,7 +423,7 @@ $(document).ready(function() {
 		        	firstYear, 
 		        	lastYear;
 
-		      //console.log(x+", "+y);
+		      console.log(x+", "+y);
 
 			    // Collision detection between clicked offset and element.
 		    	self.magnifiers.forEach(function(element) {
@@ -518,8 +475,6 @@ $(document).ready(function() {
 			ct.fillStyle = settings.backgroundColor;
 			ct.fill();
 
-	    this.addDataElements();
-
 			this.drawLine();
       // Draw years on timeline
 			for (var i=0; i<this.numYears; ++i) {
@@ -538,6 +493,7 @@ $(document).ready(function() {
 	    if (this.minimizer.show) {
 	    	this.drawZoomout();
 	    }
+	    this.addDataElements();
 		},
 		drawZoomout: function() {
 			ct.save();
@@ -596,7 +552,7 @@ $(document).ready(function() {
 
 			ct.save();
 			ct.translate(position.x,position.y);
-      ct.font = settings.textSize+'px '+settings.font;
+      ct.font = this.headlineHeight-4+'px '+settings.font;
       ct.fillStyle = "#222";
       ct.textAlign = 'right';
       ct.textBaseline = "middle";
