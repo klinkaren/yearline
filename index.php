@@ -3,7 +3,7 @@
 <head>
 	<title>yearline</title>
 </head>
-<body>
+<body bgcolor="#fff">
 	<script type="text/javascript" src="src/jquery.js"></script>
 	<script type="text/javascript" src="src/yearline.js"></script>
 
@@ -18,24 +18,24 @@
 			History
 
 			***
-			2000
+			2002
 			Milleniaboom
 			Example text for milleniaboom
 
 			***
 			1983
-			A star is born!
+			A star is born
 			Mr. Kjellberg is born. The beginning of the Viktorian era.
 			Personal
 
 			***
 			1453
 			Books are here to stay
-			Some trivia about Gutenberg.
+			Some trivia about Gutenberg. The man did know quite a lot. In fact I dont really care. Iäm gonna jflksdjgjlahglaöj fafjsadj fhalsfja sdfdsafjdsa dajf jkdshfldksöfads-.
 			History
 		</div>
 
-	<!--
+<!--		
 		<div class="easytimeline2 hejsan">
 			***
 			1450
@@ -57,7 +57,7 @@
 
 		</div>
 
-		<div class="easytimeline3">
+		<div class="yearline3">
 			***
 			10
 			Wheres Jesus?
@@ -69,15 +69,21 @@
 			How bout those Mores?
 			Jdfakldsjfa fdalkf daflkj flkdjs fafd.
 			History
-			
+
 			***
-			2964
+			2200
 			Mankind abandoms earth
-			No, really the did!
+			No, really. We did!
+			History
+
+			***
+			1200
+			Mankind abandoms earth
+			No, really. We did!
 			History
 
 		</div>
-	-->
+-->
 
 	</div>
 </body>

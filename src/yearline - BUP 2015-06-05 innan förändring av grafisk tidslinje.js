@@ -51,9 +51,6 @@ $(document).ready(function() {
 	  return 0;
 	}
 
-	function addGoogleFont(FontName) {
-	    $("head").append("<link href='https://fonts.googleapis.com/css?family=" + FontName + "' rel='stylesheet' type='text/css'>");
-	}
 
 	function Plugin(div, options) {
 	  // Variables
@@ -63,12 +60,10 @@ $(document).ready(function() {
       backgroundColor: "white",
       width: 300,
       height: 500,
-      borderRadius: 10,
-      font: "Roboto",
+      borderRadius: 10
     }, options ),
-	  this.div = div,
-	  settings.timelineWidth = 80,	  
-		addGoogleFont(settings.font);
+	  this.div = div;
+	  settings.timelineWidth = 80;
 
 		// Set minimim height and width.
 	  if (settings.height < 300) settings.height =300;
@@ -138,16 +133,16 @@ $(document).ready(function() {
 
 		createWorkspace: function(source) {
      
+
       // Add wrapper
       $( "<div id='timelineWrapper'></div>" ).css({
           'width': settings.width,
           'height': settings.height,
           'position' : 'relative',
-          'font-family': settings.font,
       }).appendTo(source);
 
    		// Add canvas
-      $( "<canvas id='timelineCanvas' width='" + settings.timelineWidth + " px' height='" + settings.height + " px'></canvas>" ).appendTo($( "#timelineWrapper" ));
+      $( "<canvas id='timelineCanvas' width='" + settings.timelineWidth + "' height='" + settings.height + "'></canvas>" ).appendTo($( "#timelineWrapper" ));
       canvas = document.getElementById('timelineCanvas');					
       ct 				= canvas.getContext('2d');												
 
@@ -158,6 +153,7 @@ $(document).ready(function() {
           'position'	: 'absolute',
           'left'		  : settings.timelineWidth,
           'top'				: 0,
+          'backgroundColor' : "#000000",
       }).appendTo(timelineWrapper);  
          
 		},
@@ -288,8 +284,7 @@ $(document).ready(function() {
 		this.holderWidth 	= 5,
 		this.magnifiers 	= new Array(),
 		this.minimizer 		= new Minimizer(10),
-		this.margin				= 10,
-		this.headlineHeight = 16,
+		//this.dataElements = new Array(),
 		this.init();
 	}
 
@@ -300,15 +295,16 @@ $(document).ready(function() {
 			if (timelines.length > 0) this.minimizer.setShow(true);
 			console.log('Added timeline: ' + this.startYear +"-"+this.endYear);
 			this.numYears = Math.ceil(settings.height / this.rowHeight);
-			this.yearSpan = (this.endYear- this.startYear) / (this.numYears-1);
+			this.yearSpan = Math.ceil((this.endYear- this.startYear) / (this.numYears-1));
 			//this.zoom.push(new Zoom(datastore[0].year, datastore[datastore.length-1].year, this.numYears));
 			this.addZoomObjects();
 			this.addEventListeners();
 			this.draw();
+			this.addDataElements();
 		},
 
 		addDataElements: function() {
-	
+			
 			// Clear datafield
 			var emptyMe = document.getElementById('datafield');
 			while( emptyMe.hasChildNodes() ){
@@ -319,72 +315,19 @@ $(document).ready(function() {
 			for (var i=0; i<datastore.length; ++i) {
 				if (datastore[i].year >= this.startYear && datastore[i].year <= this.endYear){
 					console.log(datastore[i].year);
-
-					// Where to place div (vertical)
-					percentDown = (this.endYear-datastore[i].year)/(this.endYear-this.startYear);
-					timelinePx = settings.height-this.rowHeight;
-					y = this.rowHeight/2+(timelinePx*percentDown)-this.headlineHeight;
-					//y = Math.ceil(y);
-
-					// Place div
-					$( "<div class='timelineEvent'>"+
-								"<div class='timelineHeading'>"+
-									datastore[i].title+
-								"</div>"+
-								"<div class='timelineText'>"+
-									datastore[i].text+
-								"</div>"+
-							"</div>").css({
-							'top' : Math.floor(y),
-						}).appendTo(datafield);
-
-					// Place timeline helper
-						ct.save();
-			      ct.translate(this.lineAt, Math.floor(y+this.headlineHeight)+.5);
-			      ct.beginPath();
-			      ct.moveTo(0, 0);
-			      ct.lineTo(10, 0);
-			      ct.strokeStyle = '#000',
-			      ct.lineWidth = 1;
-			      ct.stroke();
-			      ct.restore();	
 				}
-
-				// Place heading
-
 			}
 			//console.log(datastore.length);
 
       // Add div to datafield 
-      /*
       $( "<div class='timelineEvent'></div>" ).css({
           'position'	: 'absolute',
           'left'		  : 10,
           'top'				: 10,
           'backgroundColor' : '#ffffff',
       }).html("hej").appendTo(datafield);
-			*/
 
-      $(".timelineEvent").css({
-      	'position' 				: 'absolute',
-      	'left' 						: 0,
-      	'padding'					: '0px',
-      	'font-size' 			: this.headlineHeight-2+'px',
-      	'line-height'			: this.headlineHeight+'px'
-      }); 
-
-      $(".timelineHeading").css({
-      	'color' 					: '#222',
-      	'backgroundColor' : '#c9c9c9',
-      	'border-bottom' 	: '1px solid #000000',
-      	'padding'					: '0px',
-      }); 
-      $(".timelineText").css({
-      	'color' 					: '#222',
-      	'padding'					: '0px',
-      	'backgroundColor' : '#ffffff',
-      	'display' 				: 'none',
-      }); 
+      $(".timelineEvent").css({'color' : '#ffcccc'}); 
 		},
 		addZoomObjects: function() {
 			if (this.yearSpan >=5){	
@@ -396,7 +339,6 @@ $(document).ready(function() {
 			}
 		},
 		addEventListeners: function(){
-			console.log('addEventListeners');
 			var self = this, // Capturing "this" into a local variable to be able to reach in function
 					hasMinimizeListener = false;
 					hasMagnifyListeners = false
@@ -444,7 +386,6 @@ $(document).ready(function() {
 		        	clicked = false,
 		        	firstYear, 
 		        	lastYear;
-		        	console.log('OffsetTop: '+canvas.offsetTop)
 
 			    // Collision detection between clicked offset and element.
 		    	self.magnifiers.forEach(function(element) {
@@ -483,11 +424,8 @@ $(document).ready(function() {
 						firstYear = this.endYear-(this.yearSpan*(i+1));
 				this.magnifiers[i].setFirstYear(firstYear);
 				this.magnifiers[i].setLastYear(lastYear);
-				console.log('For magnifier '+i+' : Start year: '+firstYear+'\nEnd year: '+lastYear);
+				// console.log('For magnifier '+i+' : Start year: '+firstYear+'\nEnd year: '+lastYear);
 			}
-			console.log(this.startYear);
-			//this.endYear = this.magnifiers[this.magnifiers.length-1].lastYear;
-			//console.log("New endyear: "+ this.endYear);
 		},
 		draw: function() {
 			// Clear timeline
@@ -511,7 +449,7 @@ $(document).ready(function() {
 	    if (this.minimizer.show) {
 	    	this.drawZoomout();
 	    }
-	    this.addDataElements();
+
 		},
 		drawZoomout: function() {
 			ct.save();
@@ -570,11 +508,11 @@ $(document).ready(function() {
 
 			ct.save();
 			ct.translate(position.x,position.y);
-      ct.font = this.headlineHeight-4+'px '+settings.font;
+      ct.font = "12px Arial";
       ct.fillStyle = "#222";
       ct.textAlign = 'right';
       ct.textBaseline = "middle";
-      ct.fillText(parseInt(this.endYear-(this.yearSpan*i)), 0, 0);
+      ct.fillText(this.endYear-(this.yearSpan*i), 0, 0);
       ct.restore();
 			// console.log('Draw year at: '+position.x+", "+position.y);
 		},
