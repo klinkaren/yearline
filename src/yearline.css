@@ -1,25 +1,42 @@
-.timelineEvent{
+#header
 
+
+.timelineEvent{
+	margin-right: 5px;
 }
 .timelineHeading{
+	border-bottom: 1px solid black;
+	text-transform: uppercase;
 }
 .timelineTitle{
-	padding: 2px;
 }
 .timelineText{
 	padding: 2px;
+	border: 1px solid black;
+	border-top: none;
 }
 .timelineHiddenObject{
 	display: none;
 }
 .timelineCat1{
+	background-color: #000;
 	z-index:99;
 }
 .timelineCat2{
 	z-index:98;
+	background-color: #333;
 }
 .timelineCat3{
 	z-index:97;
+	background-color: #666;
+}
+.timelineCat4{
+	z-index:96;
+	background-color: #888;
+}
+.timelineCat5{
+	z-index:95;
+	background-color: #999;
 }
 .timelineBringToFront{
 	z-index:100 !important;

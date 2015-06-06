@@ -1,18 +1,78 @@
+/** 
+ * Shim layer, polyfill, for requestAnimationFrame with setTimeout fallback.
+ * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ */ 
+	window.requestAnimFrame = (function(){
+	  return  window.requestAnimationFrame       || 
+	          window.webkitRequestAnimationFrame || 
+	          window.mozRequestAnimationFrame    || 
+	          window.oRequestAnimationFrame      || 
+	          window.msRequestAnimationFrame     || 
+	          function( callback ){
+	            window.setTimeout(callback, 1000 / 60);
+	          };
+	})();
+
+
+
+	/**
+	 * Shim layer, polyfill, for cancelAnimationFrame with setTimeout fallback.
+	 */
+	window.cancelRequestAnimFrame = (function(){
+	  return  window.cancelRequestAnimationFrame || 
+	          window.webkitCancelRequestAnimationFrame || 
+	          window.mozCancelRequestAnimationFrame    || 
+	          window.oCancelRequestAnimationFrame      || 
+	          window.msCancelRequestAnimationFrame     || 
+	          window.clearTimeout;
+	})();
+
+
 $(document).ready(function() {
     'use strict';   
     // ### Put this in other document
-    $('.myYearline').yearline({
+    $('.yearline1').yearline({
+    	color:'#fff', 
+    	backgroundColor:'#fff',
     	width: 100,
-    	height: 400,
+    	height: 500,
     	borderRadius: 20
     });
+    /*
+    $('.easytimeline2').easytimeline({
+    	color:'#000', 
+    	backgroundColor:'#ccc',
+    	width: 400,
+    	height: 400,
+    	borderRadius: 10
+    });
+		$('.easytimeline3').easytimeline({
+    	color:'#000', 
+    	backgroundColor:'#ccaacc',
+    	width: 500,
+    	height: 100,
+    	borderRadius: 10
+    });
+*/
 });
 
 (function($, window, document) {
 	var timelines = new Array(),
 	settings,
 	datastore;
+  /* http://ejohn.org/blog/fast-javascript-maxmin/
+	  Array.max = function( array ){
+	      return Math.max.apply( Math, array );
+	  };
+	  Array.min = function( array ){
+	      return Math.min.apply( Math, array );
+	  };
+	*/
 
+  /**
+   * Support function to sort timeline array by year.
+   * Source: http://stackoverflow.com/questions/1129216/sort-array-of-objects-by-property-value-in-javascript
+	 */
 	function compareYear(a,b) {
 	  if (a.year < b.year)
 	    return -1;
@@ -29,15 +89,15 @@ $(document).ready(function() {
 	  // Variables
 	  settings = $.extend({
       // These are the defaults.
+      color: "#556b2f",
       backgroundColor: "white",
       width: 300,
       height: 500,
       borderRadius: 10,
       font: "Roboto",
-      dataBg: "#333",
-      dataText: "#e0e0e0",
+      dataBg: "pink",
+      dataText: "green",
       textSize: 12,
-      padding: 4,
     }, options ),
 	  this.div = div,
 	  settings.timelineWidth = 100,	  
@@ -295,81 +355,62 @@ $(document).ready(function() {
 					$("<div class='timelineEvent'>"+
 							"<div class='timelineHeading'>"+
 								"<div class='timelineTitle'>"+
-									datastore[i].title+" ("+datastore[i].year+")"+
+									datastore[i].year+": "+datastore[i].title+
 								"</div>"+
 							"</div>"+
 							"<div class='timelineText timelineHiddenObject'>"+
 								datastore[i].text+
 							"</div>"+
 						"</div>").css({
-							'top' 		: Math.floor(y-settings.textSize-settings.textSize/2-settings.padding),
+							'top' 		: Math.floor(y-settings.textSize-10),
 							//'z-index'	: +(99 - datastore[i].importance),
 						}).addClass("timelineCat"+datastore[i].importance).appendTo(datafield);
 
-					var bgColor;
-					switch(datastore[i].importance) {
-						case 1: bgColor ="#000"; break;
-						case 2: bgColor ="#333"; break;
-						case 3: bgColor ="#666"; break;
-						case 4: bgColor ="#888"; break;
-						case 5: bgColor ="#999"; break;
-						default: console.log();
-					}
-
-
-					// Place triangle
-					ct.save();
-		      ct.translate(this.lineAt, Math.floor(y));
-		      ct.beginPath();
-		      ct.moveTo(20, 0);
-		      ct.lineTo(30, 0);
-		      ct.lineTo(30, -5);
-		      ct.closePath();
-		      ct.fillStyle = bgColor,
-		      ct.fill();
-		      ct.restore();	
-
 					// Place line from timeline to DataElement. 
-					ct.save();
-		      ct.translate(this.lineAt, Math.floor(y)+.5);
-		      ct.beginPath();
-		      ct.moveTo(0,0);
-					ct.lineTo(30,0);
-					ct.lineWidth =1;
-					ct.strokeStyle = "black"
-					ct.stroke();
-		      ct.restore();	
+						ct.save();
+			      ct.translate(this.lineAt, Math.floor(y));
+			      ct.beginPath();
+			   		/*
+			      var grd=ct.createLinearGradient(0,0,30,0);
+						grd.addColorStop(0,"black");
+						grd.addColorStop(1,settings.dataBg);
+						ct.moveTo(0,0);
+						ct.lineTo(30,0);
+						ct.lineWidth =3;
+						ct.strokeStyle = grd;
+						ct.stroke();
+			      */
+			      ct.moveTo(20, 0);
+			      ct.lineTo(30, 0);
+			      ct.lineTo(30, -5);
+			      ct.closePath();
+			      ct.fillStyle = settings.dataBg,
+			      ct.fill();
+			      ct.restore();	
 				}
 
 			}
-
-			$("#datafield").css({
-				'backgroundColor'	: settings.backgroundColor,
-			});
 
       $(".timelineEvent").css({
       	'position' 				: 'absolute',
       	'left' 						: 0,
       	'padding'					: '0px',
-      	'font-size' 			: settings.textSize+'px',
+      	'font-size' 			: settings.textSize+2+'px',
       	'line-height'			: settings.textSize+2+'px',
+      	'border'					: "2px solid "+settings.dataBg,
       	//'border-radius'		: '2px',
         //'-moz-border-radius': '2px',
-        //'backgroundColor'	: '#ffffff',
+        'backgroundColor'	: '#ffffff',
         'color'						: '#222',
       });
 
       $(".timelineHeading").css({
-      	//'backgroundColor' : settings.dataBg,
+      	'backgroundColor' : settings.dataBg,
       	'color' 					: settings.dataText,
       });
 
       $(".timelineText").css({
       	'font-size' : settings.textSize,
-      	'backgroundColor' : 'white',
-      });
-      $(".timelineTitle").css({
-      	'padding' : settings.padding,
       });
 
       //dataBg: "pink",
@@ -392,8 +433,7 @@ $(document).ready(function() {
 			});
 		},
 		addZoomObjects: function() {
-			var limit = ((this.endYear-this.startYear)/this.yearSpan);
-			if (this.yearSpan >=limit){	
+			if (this.yearSpan >=5){	
 				// Add magnifiers
 		    for (var i=0; i<this.numYears-1; ++i) {
 		    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));

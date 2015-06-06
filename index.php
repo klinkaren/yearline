@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>yearline</title>
+	<title>YEARLINE</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
 	<link href="src/yearline.css" type="text/css" rel="stylesheet">
+	<link href="src/stylesheet.css" type="text/css" rel="stylesheet">
 </head>
-<body bgcolor="#fff">
+<body>
 	<script type="text/javascript" src="src/jquery.js"></script>
 	<script type="text/javascript" src="src/yearline.js"></script>
 
-	<div id='content'>
-	<h1>Yearline</h1>
-		<div class="yearline1">
 
+	<div id="header"></div>
+	<div id='content'>
+	<h1>Yearline demo</h1>
+		<div class="myYearline">
+			***
+			2008
+			Obama Elected
+			First African-American president of the United States elected.
+			3
 			***
 			1789
 			French revolution
-			Jada, jada, jada.
-			2
+			"Off with there heads!"
+			1
 
 			***
-			2002
-			Milleniaboom
-			Party!
-			3
-
-			***
-			1983
-			A star is born
-			Mr. Kjellberg is born. The beginning of the Viktorian era.
+			2001
+			9/11
+			Four hijacked airliners are used by terrorists to destroy the World Trade Center in New York, and damage the Pentagon in the worst terrorist act in world history.
 			1
 
 			***
@@ -38,67 +40,94 @@
 
 			***
 			1453
-			Fall of western Rome
-			Jada, jada, jada.
+			Fall of Constantinople
+			The capture of Constantinople (the home of classical learning) by the Turks. They compel the Greek scholars to flee to Italy and other West European countries where they spread the knowledge of Greek philosophy and literature. This is the beginning of the Renaissance in Europe. 
 			2
 
 			***
 			1492
-			Columbus
-			Godmorgon Magistern!
+			Columbus reaches America
+			Christopher Columbus lands in what is now the Bahamas.
 			1
+
+			***
+			1775
+			The American Revolution
+			Starting 1775, ending 1783.
+			1
+
+			***
+			1787
+			The U.S. Constitution is written.
+			Add later
+			2
+
+			***
+			1835
+			First revolver
+			Samuel Colt introduces the first revolver
+			4
+
+			***
+			1848
+			Goldrush
+			Gold is found in California, setting off a massive influx of settlers.
+			4
+
+			***
+			1865
+			Slavery made illegal in the US
+			With the Emancipation Proclamation, slavery is made illegal throughout the United States.
+			1
+
+			***
+			1865
+			Lincoln is murdered
+			Lincoln is murdered; Andrew Johnson becomes president.
+			4
+
+			***
+			1517
+			Martin Luther launches Reformation
+			Luther’s 95 theses launch the Reformation
+			2
+
+			***
+			1804
+			Napoleon Arises
+			Napoleon crowned Emperor of France
+			3
+
+			***
+			1680
+			111111111111111111
+			111111111111111111
+			1
+
+			***
+			1670
+			22222222222222222222
+			22222222222222222222
+			2
+
+			***
+			1660
+			3333333333333333333333
+			3333333333333333333333
+			3
+
+			***
+			1650
+			22222222222222222222444
+			22222222222222222222444
+			4
+
+			***
+			1640
+			22222222222222222222555555
+			22222222222222222222555555
+			5
 		</div>
-
-<!--		
-		<div class="easytimeline2 hejsan">
-			***
-			1450
-			Books dude!
-			Jada, jada, jada
-			Inventions
-
-			***
-			1453
-			Fall of east Rome
-			Jdfakldsjfa fdalkf daflkj flkdjs fafd.
-			Rome
-			
-			***
-			1492
-			Columbus
-			Go west!
-			Explorers
-
-		</div>
-
-		<div class="yearline3">
-			***
-			10
-			Wheres Jesus?
-			Jada, jada, jada
-			History
-
-			***
-			900
-			How bout those Mores?
-			Jdfakldsjfa fdalkf daflkj flkdjs fafd.
-			History
-
-			***
-			2200
-			Mankind abandoms earth
-			No, really. We did!
-			History
-
-			***
-			1200
-			Mankind abandoms earth
-			No, really. We did!
-			History
-
-		</div>
--->
-
 	</div>
 </body>
 </html>
