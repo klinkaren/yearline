@@ -3,12 +3,11 @@
 <head>
 	<title>YEARLINE</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf8">
-	<link href="src/yearline.css" type="text/css" rel="stylesheet">
-	<link href="src/stylesheet.css" type="text/css" rel="stylesheet">
+	<link href="stylesheet.css" type="text/css" rel="stylesheet">
 </head>
 <body>
 	<script type="text/javascript" src="src/jquery.js"></script>
-	<script type="text/javascript" src="src/yearline.js"></script>
+	<script type="text/javascript" src="yearline.js"></script>
 
 
 	<div id="header"></div>
