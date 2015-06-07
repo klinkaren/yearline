@@ -1,11 +1,5 @@
 $(document).ready(function() {
     'use strict';   
-    // ### Put this in other document
-    $('.myYearline').yearline({
-    	width: 100,
-    	height: 400,
-    	borderRadius: 20
-    });
 });
 
 (function($, window, document) {
@@ -30,17 +24,16 @@ $(document).ready(function() {
 	  settings = $.extend({
       // These are the defaults.
       backgroundColor: "white",
-      width: 300,
-      height: 500,
-      borderRadius: 10,
+      width: 400,
+      height: 300,
       font: "Roboto",
-      dataBg: "#333",
       dataText: "#e0e0e0",
-      textSize: 12,
       padding: 4,
     }, options ),
 	  this.div = div,
 	  settings.timelineWidth = 100,	  
+      settings.textSize = 12,
+      settings.dataBg = "#333",
 		addGoogleFont(settings.font);
 
 		// Set minimim height and width.
