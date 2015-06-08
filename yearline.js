@@ -160,12 +160,12 @@ $(document).ready(function() {
 	 * Will hold start and end when zooming in on timeline. 
 	 * Save theese as array and push/pop when zooming in/out.
 	 */
-	function Zoom(from, to, numYears) {
+	function Zoom(from, to, numYy) {
 		this.from = from;
 		this.to 	= to;
 		this.numYears = numYears;
 		this.span = Math.ceil( (to-from) / numYears);
-		console.log('Added zoom: '+ this.from +"-"+ this.to + ". Span = " + this.span + " with " + this.numYears + " years");
+		console.log('Added zoom: '+ this.from +"-"+ this.to + ". Span = " + this.span + " with " + this.numYears + " years");Shown
 	}
 	Zoom.prototype = {
 		// Nothing at the moment.
@@ -239,8 +239,9 @@ $(document).ready(function() {
 	}
 
 	function Timeline(from, to) {
-	  this.numYears,	// number of years to show to left of timeline
+		this.numYears,
 		this.yearSpan,	// span between numYears
+	  this.yearsShown,  // number of years to show to left of timeline
 		this.zoom 				= new Array(); // Array for holding start and end years when zooming in and out.
 		this.startYear	  = from,
 		this.endYear			= to,
@@ -257,14 +258,36 @@ $(document).ready(function() {
 		init: function() {
 			if (timelines.length > 0) this.minimizer.setShow(true);
 			//console.log('Added timeline: ' + this.startYear +"-"+this.endYear);
-			this.numYears = Math.ceil(settings.height / this.rowHeight);
-			this.yearSpan = (this.endYear- this.startYear) / (this.numYears-1);
-			//this.zoom.push(new Zoom(datastore[0].year, datastore[datastore.length-1].year, this.numYears));
+			
+			this.numYears = this.countYears();
+
+			// ### Ändra mig!!!!
+			this.yearsShown = Math.ceil(settings.height / this.rowHeight);
+			//this.yearsShown = Math.ceil(settings.height / this.rowHeight)-3;
+	
+			//console.log("numYears: "+this.numYears+"\nnyearsShown: "+this.yearsShown);
+
+			this.rowHeight = settings.height/ this.yearsShown;
+			this.yearSpan = Math.ceil((this.endYear- this.startYear) / (this.yearsShown-1));
+		
+
+			this.startYear = parseInt(this.endYear-(this.yearSpan*this.yearsShown));
+			//console.log("endYear: "+this.endYear);
+			//console.log("yearspan: "+this.yearSpan);
+			
+
 			this.addZoomObjects();
 			this.addEventListeners();
 			this.draw();
 		},
 
+		countYears: function() {
+			years = 0
+			for (var i=0; i<datastore.length; ++i) {
+				if (datastore[i].year >= this.startYear && datastore[i].year <= this.endYear) years++;
+			}
+			return years;
+		},
 		addDataElements: function() {
 	
 			// Clear datafield
@@ -279,9 +302,13 @@ $(document).ready(function() {
 					//console.log(datastore[i].year);
 
 					// Where to place div (vertical)
-					percentDown = (this.endYear-datastore[i].year)/(this.endYear-this.startYear);
+					//percentDown = (this.endYear-datastore[i].year)/(this.endYear-this.startYear);
+					firstYear = parseInt(this.endYear-(this.yearSpan*(this.yearsShown-1)));
+					percentDown = (this.endYear-datastore[i].year)/(this.endYear-firstYear);
 					timelinePx = settings.height-this.rowHeight;
-					y = this.rowHeight/2+(timelinePx*percentDown)+1;
+					y = this.rowHeight/2+(timelinePx*percentDown);
+					console.log("Startyear: "+this.startYear+"\nyear: "+datastore[i].year+"\npercentDown: "+percentDown+"\nY: "+y);
+					console.log(firstYear);
 					//y = Math.ceil(y);
 
 					// Place div
@@ -388,7 +415,7 @@ $(document).ready(function() {
 			var limit = ((this.endYear-this.startYear)/this.yearSpan);
 			if (this.yearSpan >=limit){	
 				// Add magnifiers
-		    for (var i=0; i<this.numYears-1; ++i) {
+		    for (var i=0; i<this.yearsShown-1; ++i) {
 		    	this.magnifiers.push(new Magnifier(this.lineAt,i*this.rowHeight+this.rowHeight));
 		    	//console.log("Magnifier "+i+" at "+ this.magnifiers[i].position.x + ", "+this.magnifiers[i].position.y);
 				}
@@ -505,14 +532,14 @@ $(document).ready(function() {
 
 			this.drawLine();
       // Draw years on timeline
-			for (var i=0; i<this.numYears; ++i) {
+			for (var i=0; i<this.yearsShown; ++i) {
     		this.drawHolderOnLine(i);
     		this.drawYear(i);
 	    }	
 
 	    // Draw magnifiers (if any).
 	    if (this.magnifiers.length > 0){    	
-		    for (var i=0; i<this.numYears-1; ++i) {
+		    for (var i=0; i<this.yearsShown-1; ++i) {
 		    	this.magnifiers[i].draw();
 				}
 	    }
@@ -583,6 +610,7 @@ $(document).ready(function() {
       ct.fillStyle = "#222";
       ct.textAlign = 'right';
       ct.textBaseline = "middle";
+      //ct.fillText(parseInt(this.endYear-(this.yearSpan*i)), 0, 0);
       ct.fillText(parseInt(this.endYear-(this.yearSpan*i)), 0, 0);
       ct.restore();
 			// console.log('Draw year at: '+position.x+", "+position.y);
