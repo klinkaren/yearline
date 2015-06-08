@@ -1,3 +1,4 @@
+![Yearline logo](/dev/yearlineExample.jpg?raw=true "Timelined-logo")
 # yearline
 A jQuery plugin for creating historic timelines based on year.
 
