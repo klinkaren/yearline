@@ -1,11 +1,15 @@
-# yearline
+# YEARLINE
 A jQuery plugin for creating historic timelines based on year.
 
+## Example
+![Yearline example](/dev/yearlineExample.jpg?raw=true "Timelined-logo")
 
-How to use it
-===
-Will be added later
+## Requirements
+* jQuery
+* Javascript v1.6 or above.
 
-Licence
-===
-MIT... text will be added later
+## How to use
+[Click here for installation guide](http://www.viktorkjellberg.com/yearline/#installationGuide)
+
+## Licence
+This software is free and carries a MIT license.
