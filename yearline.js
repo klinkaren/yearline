@@ -307,8 +307,8 @@ $(document).ready(function() {
 					percentDown = (this.endYear-datastore[i].year)/(this.endYear-firstYear);
 					timelinePx = settings.height-this.rowHeight;
 					y = this.rowHeight/2+(timelinePx*percentDown);
-					console.log("Startyear: "+this.startYear+"\nyear: "+datastore[i].year+"\npercentDown: "+percentDown+"\nY: "+y);
-					console.log(firstYear);
+					//console.log("Startyear: "+this.startYear+"\nyear: "+datastore[i].year+"\npercentDown: "+percentDown+"\nY: "+y);
+					//console.log(firstYear);
 					//y = Math.ceil(y);
 
 					// Place div
