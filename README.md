@@ -13,4 +13,4 @@ How to use it
 
 Licence
 ===
-MIT... text will be added later
+This software is free and carries a MIT license.
