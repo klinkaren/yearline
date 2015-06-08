@@ -6,10 +6,10 @@ A jQuery plugin for creating historic timelines based on year.
 
 ## Requirements
 * jQuery
- Javascript v1.6 or above.
+* Javascript v1.6 or above.
+
 ## How to use
 [Click here for installation guide](http://www.viktorkjellberg.com/yearline/#installationGuide)
 
-Licence
-###
+## Licence
 This software is free and carries a MIT license.
