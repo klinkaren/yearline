@@ -298,12 +298,13 @@ $(document).ready(function() {
 
 			// Add data elements if within range
 			for (var i=0; i<datastore.length; ++i) {
-				if (datastore[i].year >= this.startYear && datastore[i].year <= this.endYear){
+				console.log(this.startYear);
+				firstYear = parseInt(this.endYear-(this.yearSpan*(this.yearsShown-1)));
+				if (datastore[i].year >= firstYear && datastore[i].year <= this.endYear){
 					//console.log(datastore[i].year);
 
 					// Where to place div (vertical)
 					//percentDown = (this.endYear-datastore[i].year)/(this.endYear-this.startYear);
-					firstYear = parseInt(this.endYear-(this.yearSpan*(this.yearsShown-1)));
 					percentDown = (this.endYear-datastore[i].year)/(this.endYear-firstYear);
 					timelinePx = settings.height-this.rowHeight;
 					y = this.rowHeight/2+(timelinePx*percentDown);
